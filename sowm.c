@@ -34,6 +34,7 @@ static void (*events[LASTEvent])(XEvent *e) = {
 void win_focus(client *c) {
     cur = c;
     XSetInputFocus(d, cur->w, RevertToParent, CurrentTime);
+	XRaiseWindow(d,cur->w );
 }
 
 void notify_destroy(XEvent *e) {
@@ -76,7 +77,8 @@ void button_press(XEvent *e) {
     if (!e->xbutton.subwindow) return;
 
     win_size(e->xbutton.subwindow, &wx, &wy, &ww, &wh);
-    XRaiseWindow(d, e->xbutton.subwindow);
+	XRaiseWindow(d,cur->w );
+    //XRaiseWindow(d, e->xbutton.subwindow);
     mouse = e->xbutton;
 }
 
@@ -272,6 +274,6 @@ int main(void) {
     XDefineCursor(d, root, XCreateFontCursor(d, 68));
     input_grab(root);
 
-    while (1 && !XNextEvent(d, &ev)) // 1 && will forever be here.
+    while (1 && !XNextEvent(d, &ev))
         if (events[ev.type]) events[ev.type](&ev);
 }
